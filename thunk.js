@@ -3,8 +3,8 @@
 
 const { default: axios } = require("axios")
 const { createStore, applyMiddleware } = require("redux")
-const thunk = require('redux-thunk')
-const apiUrl= "https://jsonplaceholder.typicode.com/todos"
+const apiUrl= "https://jsonplaceholder.typicode.com/todo"
+const thunk = require('redux-thunk').default
 
 // middleware - redux-thunk
 
@@ -42,7 +42,7 @@ const getTodosSuccess = (todos)=>{
 }
 const getTodosError = (error)=>{
     return {
-        type: GET_TODOS_REQUEST,
+        type: GET_TODOS_FAILED,
         payload: error
     }
 }
@@ -83,9 +83,13 @@ const todoReducer = (state = initialTodoStates , action )=>{
 const fetchData =()=>{
     return (dispatch)=>{
         dispatch(getTodosRequest())
-        axios.get(apiUrl)
-        .than((res)=>console.log(res.data))
-        .catch((error)=>console.log(error.message))
+       axios.get(apiUrl)
+       .then(res=>{
+        const todos = res.data
+        const title = todos.map(todo=> todo.title)
+        console.log(title)
+       })
+       .catch(error=>console.log(error.message))
     }
 }
 
@@ -98,3 +102,6 @@ store.subscribe(()=>{
     console.log(store.getState())
 })
 
+
+// store.dispatch(fetchData())
+console.log(1/0)
